@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        db = MySQLiteOpenHelper(this, "student.db", null, 1)
+            db = MySQLiteOpenHelper(this, "student.db", null, 1)
 
         dbList = db.getAllData()
         adapter = MainAdapter(this, dbList)

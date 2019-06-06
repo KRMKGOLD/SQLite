@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import org.jetbrains.annotations.TestOnly
 
 
 class MySQLiteOpenHelper(context: Context, name: String, factory: SQLiteDatabase.CursorFactory?, version: Int) :
@@ -53,13 +54,14 @@ class MySQLiteOpenHelper(context: Context, name: String, factory: SQLiteDatabase
     }
 
     fun selectData(id : Int) : Student {
-        val db = readableDatabase
-        val cursor = db.rawQuery("SELECT name, age, address from student where _id $id", null)
-
+        val db = writableDatabase
+        val cursor = db.rawQuery("Select * from student where _id = $id", null)
         val tempStudent = Student(null, null, null)
-        tempStudent.name = cursor.getString(0)
-        tempStudent.age = cursor.getString(1)
-        tempStudent.address = cursor.getString(2)
+
+        cursor.moveToNext()
+        tempStudent.name = cursor.getString(1)
+        tempStudent.age = cursor.getString(2)
+        tempStudent.address = cursor.getString(3)
 
         return tempStudent
     }
