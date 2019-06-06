@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import org.jetbrains.annotations.TestOnly
 
 
@@ -49,12 +50,11 @@ class MySQLiteOpenHelper(context: Context, name: String, factory: SQLiteDatabase
 
             tempArrayList.add(tempStudent)
         }
-
-        return tempArrayList
+       return tempArrayList
     }
 
-    fun selectData(id : Int) : Student {
-        val db = writableDatabase
+    fun selectData(id : Int): Student {
+        val db = readableDatabase
         val cursor = db.rawQuery("Select * from student where _id = $id", null)
         val tempStudent = Student(null, null, null)
 
@@ -64,6 +64,13 @@ class MySQLiteOpenHelper(context: Context, name: String, factory: SQLiteDatabase
         tempStudent.address = cursor.getString(3)
 
         return tempStudent
+    }
+
+    fun updateData(id : Int, data : ArrayList<String>) {
+        val db = writableDatabase
+
+        Log.d("data", data.toString())
+        db.execSQL("""update student set name = '${data[0]}', age = '${data[1]}', address = '${data[2]}' where _id = $id""")
     }
 
     fun clearDB() {
