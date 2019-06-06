@@ -2,11 +2,8 @@ package com.example.sqlitestudy
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
-import org.jetbrains.annotations.TestOnly
 
 
 class MySQLiteOpenHelper(context: Context, name: String, factory: SQLiteDatabase.CursorFactory?, version: Int) :
@@ -43,34 +40,25 @@ class MySQLiteOpenHelper(context: Context, name: String, factory: SQLiteDatabase
         val tempArrayList : ArrayList<Student> = arrayListOf()
 
         while(cursor.moveToNext()) {
-            val tempStudent = Student(null, null, null)
-            tempStudent.name = cursor.getString(1)
-            tempStudent.age = cursor.getString(2)
-            tempStudent.address = cursor.getString(3)
+            val tempName = cursor.getString(1)
+            val tempAge = cursor.getString(2)
+            val tempAddress = cursor.getString(3)
 
+            val tempStudent = Student(tempName, tempAge, tempAddress)
             tempArrayList.add(tempStudent)
         }
        return tempArrayList
     }
 
-    fun selectData(id : Int): Student {
-        val db = readableDatabase
-        val cursor = db.rawQuery("Select * from student where _id = $id", null)
-        val tempStudent = Student(null, null, null)
-
-        cursor.moveToNext()
-        tempStudent.name = cursor.getString(1)
-        tempStudent.age = cursor.getString(2)
-        tempStudent.address = cursor.getString(3)
-
-        return tempStudent
-    }
-
     fun updateData(id : Int, data : ArrayList<String>) {
         val db = writableDatabase
-
-        Log.d("data", data.toString())
         db.execSQL("""update student set name = '${data[0]}', age = '${data[1]}', address = '${data[2]}' where _id = $id""")
+    }
+
+    fun deleteData(id : Int) {
+        val db = writableDatabase
+        db.execSQL("Delete from student where _id = $id")
+        db.execSQL("update student set _id = _id - 1 where _id > $id")
     }
 
     fun clearDB() {
